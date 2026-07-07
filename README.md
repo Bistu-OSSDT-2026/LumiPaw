@@ -1,174 +1,129 @@
-# LumiPaw
+# 经济系统模块 (Economy + Shop)
 
-LumiPaw 是一款基于桌宠的自律辅助工具，旨在通过任务管理、行为反馈和虚拟奖励机制，帮助用户提升学习和办公过程中的专注度与自律能力。
+## 3号模块：经济系统 + 商店
 
-用户可以创建待完成任务，在完成任务的过程中通过键盘输入与桌宠产生互动。桌宠会根据用户的工作状态改变亮度，并在任务完成后给予奖励反馈。用户可以使用获得的虚拟金币购买帽子、装饰品等道具，实现桌宠个性化养成。
+### 模块概述
+本模块实现了完整的金币系统和商店功能，包括：
+- 金币积累和消费
+- 商店购买系统
+- 物品背包管理
+- 事件监听和响应
+- 与其他模块的对接
 
----
+### 必须实现的函数（核心接口）
 
-## 项目背景
+```python
+# 金币系统
+add_coins(amount: int) -> None      # 添加金币
+spend_coins(amount: int) -> bool    # 花费金币，返回是否成功
+get_coins() -> int                 # 获取当前金币数量
 
-在学习和办公过程中，用户经常面临任务拖延、缺少反馈以及长期专注动力不足的问题。
+# 商店系统
+buy_item(item_id: str) -> bool     # 购买商品
+get_shop_items() -> Dict           # 获取商店所有商品
+get_purchased_items() -> List      # 获取已购买的商品列表
+```
 
-LumiPaw 希望通过轻量化的桌宠陪伴方式，将用户的自律行为转化为可视化反馈，让完成任务的过程更加具有趣味性和持续动力。
+### 与4号主程序的对接接口
 
----
+#### 1. 事件监听（4号需要调用）
+```python
+from event_listener import listen_task_events, listen_purchase_events
 
-## 项目功能
+# 监听任务完成事件
+def on_task_reward(event):
+    if event["success"]:
+        # 给予金币奖励
+        add_coins(10)
 
-### 1. 桌宠系统
+listen_task_events(on_task_reward)
 
-- 基于 Bongo Cat 风格桌宠素材
-- 支持桌宠状态变化
-- 根据用户行为调整发光效果
-- 任务完成后进入奖励高亮状态
+# 监听购买事件
+def on_purchase(event):
+    # 处理购买逻辑
+    pass
 
----
+listen_purchase_events(on_purchase)
+```
 
-### 2. 任务管理系统
+#### 2. 事件触发（4号需要调用）
+```python
+from event_listener import trigger_task_completed, trigger_purchase_event
 
-- 创建多个待完成任务
-- 设置任务预计完成时间
-- 选择任务开始执行
-- 根据任务执行情况判断是否获得奖励
+# 任务完成时触发
+trigger_task_completed(task_name, duration, success)
 
----
+# 购买商品后触发
+trigger_purchase_event(item_id, price)
+```
 
-### 3. 行为反馈系统
+### 全局变量规范
+- `coins`: int - 当前金币数量（0~无上限）
+- `shop_items`: Dict - 商店商品数据
+- `purchased_items`: List - 已购买商品列表
 
-- 检测用户键盘输入行为
-- 持续输入时桌宠逐渐发光
-- 长时间无操作时桌宠逐渐变暗
-- 完成任务后触发奖励反馈
+### 统一事件结构
+```python
+# 任务完成事件
+task_completed_event = {
+    "task_name": str,
+    "duration": int,
+    "success": bool
+}
 
----
+# 购买事件
+purchase_event = {
+    "item_id": str,
+    "price": int
+}
+```
 
-### 4. 虚拟经济系统
+### 使用方法
 
-- 完成任务获得虚拟金币
-- 使用金币购买桌宠装饰
-- 保存用户购买记录
+#### 基本使用
+```python
+from economy import add_coins, get_coins, buy_item
 
----
+# 添加金币
+add_coins(50)
 
-### 5. 桌宠装饰系统
+# 获取当前金币
+current_coins = get_coins()
 
-用户可以使用金币购买：
+# 购买商品
+if buy_item("food"):
+    print("购买成功！")
+```
 
-- 帽子
-- 装饰品
+#### 与主程序对接
+```python
+# 在主程序中导入
+from economy_module import event_listener
 
-用于提升桌宠个性化体验。
+# 注册事件回调
+def handle_task_completion(event):
+    if event["success"]:
+        # 给予10金币奖励
+        add_coins(10)
 
----
+event_listener.register_task_callback(handle_task_completion)
+```
 
-## 技术栈
+### 商店商品列表
+- `food`: 食物 (10金币) - 恢复少量宠物能量
+- `toy`: 玩具 (25金币) - 让宠物开心
+- `medicine`: 药品 (50金币) - 恢复宠物健康
+- `accessory`: 饰品 (100金币) - 给宠物佩戴装饰
 
-### 开发语言
-
-- Python
-
-### 图形界面
-
-- PyQt
-
-
-### 其他技术
-
-- Git
-- GitHub
-- AI辅助开发
-
----
-
-## 项目架构
-
-
-LumiPaw
-
-├── UI层
-│ └── 用户交互界面
-│
-├── Main
-│ └── 模块调度与事件管理
-│
-├── Task Manager
-│ └── 任务创建、执行、完成判断
-│
-├── Pet System
-│ └── 桌宠显示、状态控制、发光反馈
-│
-├── Economy System
-│ └── 金币管理、购买逻辑
-│
-└── Data Storage
-└── 用户数据保存
-
-
----
-
-## 使用流程
-
-1. 用户启动 LumiPaw。
-2. 创建多个待完成任务，并设置预计时间。
-3. 选择一个任务开始执行。
-4. 用户进行学习或办公，桌宠根据键盘输入变化。
-5. 完成任务后获得虚拟金币奖励。
-6. 使用金币购买桌宠帽子和装饰品。
-
----
-
-## 开发环境
-
-- Windows 10 / Windows 11
-- Python 3.11
-- Git
-
----
-
-## 安装方式
-
-克隆项目：
-
+### 独立运行测试
 ```bash
-git clone 项目地址
+cd economy_module
+python main.py
+```
 
-进入项目目录：
-
-cd LumiPaw
-
-安装依赖：
-
-pip install -r requirements.txt
-运行方式
-
-执行：
-
-python src/main.py
-
-启动 LumiPaw。
-
-开源协议
-
-本项目采用 MIT License 开源协议。
-
-该协议允许其他开发者自由使用、修改和分发项目代码，同时要求保留原作者版权信息。
-
-项目中使用的第三方素材遵循其原始许可证要求。
-
-贡献方式
-
-欢迎开发者参与项目改进。
-
-贡献流程：
-
-提交 Issue 描述问题或功能建议。
-创建分支进行开发。
-提交 Pull Request。
-经过审核后合并代码。
-项目成员
-成员1（wonderchaos）：桌宠系统开发
-成员2（duhanyu363）：任务系统开发
-成员3（Jimber0131）：经济与商店系统开发
-成员4（wyj1017）：系统集成开发
-成员5（Cai0516）：UI与输入系统开发
+### 模块独立性说明
+- ✅ 可以独立运行（包含main测试）
+- ✅ 不依赖其他模块内部实现
+- ✅ 只通过函数参数和返回值进行交互
+- ✅ 遵守全局变量命名规范
+- ✅ 使用统一事件结构进行通信
