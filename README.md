@@ -89,23 +89,23 @@ LumiPaw 希望通过轻量化的桌宠陪伴方式，将用户的自律行为转
 
 LumiPaw
 
-├── UI层
-│ └── 用户交互界面
-│
-├── Main
-│ └── 模块调度与事件管理
-│
-├── Task Manager
-│ └── 任务创建、执行、完成判断
-│
-├── Pet System
-│ └── 桌宠显示、状态控制、发光反馈
-│
-├── Economy System
-│ └── 金币管理、购买逻辑
-│
-└── Data Storage
-└── 用户数据保存
+UI层
+用户交互界面
+
+Main
+模块调度与事件管理
+
+Task Manager
+任务创建、执行、完成判断
+
+Pet System
+桌宠显示、状态控制、发光反馈
+
+Economy System
+金币管理、购买逻辑
+
+Data Storage
+用户数据保存
 
 
 ---
