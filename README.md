@@ -140,6 +140,7 @@ git clone 项目地址
 
 cd LumiPaw
 
+pip install -r requirements.txt
 运行方式
 
 执行：
