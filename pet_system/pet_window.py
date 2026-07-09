@@ -66,6 +66,12 @@ try:
                     target_slot = "neck"
                 elif category_id == "body":
                     target_slot = "body"
+                elif category_id in ("face", "eyewear"):
+                    target_slot = "face"
+                elif category_id == "headwear":
+                    target_slot = "head"
+                elif category_id == "neckwear":
+                    target_slot = "neck"
                 break
 
         if not target_slot or not found_item:

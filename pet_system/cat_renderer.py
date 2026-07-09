@@ -173,7 +173,7 @@ class CatRenderer:
         render_order 中 image 以 "玩具-" 开头的会被放入左下角玩具区。
         """
         self._decorations = []
-        self._toys = []
+        # 注意：不清空 _toys，玩具由 show_toy/hide_toy 独立管理
         for item in render_order:
             img_path = item.get("image", "")
             if not img_path:
@@ -421,20 +421,18 @@ class CatRenderer:
     # ----------------------------------------------------------
 
     def _draw_toys(self, painter: QPainter, win_w: int, win_h: int):
-        """在靠近猫的底部区域绘制玩具（与猫帧同缩放系数，不遮挡猫）。"""
+        """在左下角绘制玩具，靠近小猫但不遮挡。"""
         if not self._toys:
             return
 
         padding = 15
-        # 从猫的底部区域开始摆放：靠近底部边缘，略微偏右
         for toy in self._toys:
             pm = toy.get("pixmap")
             if not pm or pm.isNull():
                 continue
 
-            # 放置到靠近猫但避开猫身的位置
-            # 偏右侧底部，保证不进入猫的中心区域
-            x = win_w - pm.width() - padding
+            # 左下角，距离猫近一点
+            x = padding
             y = win_h - pm.height() - padding
             painter.drawPixmap(x, y, pm)
 
