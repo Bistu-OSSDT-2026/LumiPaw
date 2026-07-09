@@ -421,19 +421,22 @@ class CatRenderer:
     # ----------------------------------------------------------
 
     def _draw_toys(self, painter: QPainter, win_w: int, win_h: int):
-        """在左下角绘制玩具，靠近小猫但不遮挡。"""
+        """在左下角绘制玩具，紧贴猫身左侧但不遮挡。"""
         if not self._toys:
             return
 
-        padding = 15
+        # 猫身可见区域估算（猫在 450x450 画布中心，透明边框约 10%）
+        cat_body_left = int(win_w * 0.10)
+        cat_body_bottom = int(win_h * 0.90)
+
         for toy in self._toys:
             pm = toy.get("pixmap")
             if not pm or pm.isNull():
                 continue
 
-            # 左下角，距离猫近一点
-            x = padding
-            y = win_h - pm.height() - padding
+            # 定位到猫身可见区的左下角，完全可见且贴近猫
+            x = cat_body_left
+            y = cat_body_bottom - pm.height()
             painter.drawPixmap(x, y, pm)
 
     def _draw_keyboard_glow(self, painter: QPainter, w: int, h: int,

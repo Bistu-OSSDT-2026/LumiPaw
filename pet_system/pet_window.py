@@ -81,6 +81,18 @@ try:
             print(f"[错误] 请先在商店购买 {found_item['name']}")
             return False
 
+        # 互斥规则：蝴蝶结 ↔ 帽子不能共存
+        _conflict_pairs = {
+            "bow_tie": ["decorative_hat", "casual_hat"],
+            "decorative_hat": ["bow_tie"],
+            "casual_hat": ["bow_tie"],
+        }
+        if item_id in _conflict_pairs:
+            for conflict_id in _conflict_pairs[item_id]:
+                for slot_id in warehouse:
+                    if conflict_id in warehouse[slot_id]:
+                        warehouse[slot_id].remove(conflict_id)
+
         # ⇓ 原有限制检查 (len >= 3) 已被移除 ⇓
         warehouse[target_slot].append(item_id)
         print(f"[穿戴] {found_item['name']} → {wear_slots[target_slot]}")
