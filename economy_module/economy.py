@@ -92,23 +92,7 @@ shop_categories: Dict[str, Dict[str, Dict]] = {
             }
         }
     },
-    "face": {
-        "name": "面部装饰",
-        "items": {
-            "pink_blush": {
-                "name": "腮红",
-                "price": 15,
-                "description": "可爱粉色腮红",
-                "image": "腮红.PNG"
-            },
-            "decorative_blush": {
-                "name": "装饰腮红",
-                "price": 15,
-                "description": "装饰性腮红",
-                "image": "装饰-腮红.PNG"
-            }
-        }
-    },
+    
     "food": {
         "name": "食品类",
         "items": {
