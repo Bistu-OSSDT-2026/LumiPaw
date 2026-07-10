@@ -18,7 +18,7 @@ LumiPaw 希望通过轻量化的桌宠陪伴方式，将用户的自律行为转
 
 ### 1. 桌宠系统
 
-- 基于 Bongo Cat 风格桌宠素材
+- 基于手绘桌宠素材
 - 支持桌宠状态变化
 - 根据用户行为调整发光效果
 - 任务完成后进入奖励高亮状态
@@ -72,9 +72,6 @@ LumiPaw 希望通过轻量化的桌宠陪伴方式，将用户的自律行为转
 
 - PyQt
 
-### 数据存储
-
-- JSON
 
 ### 其他技术
 
@@ -133,8 +130,7 @@ Data Storage
 
 克隆项目：
 
-```bash
-git clone 项目地址
+下载项目.zip文件 解压
 
 进入项目目录：
 
@@ -145,7 +141,7 @@ pip install -r requirements.txt
 
 执行：
 
-python src/main.py
+run.bat
 
 启动 LumiPaw。
 
