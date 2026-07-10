@@ -368,8 +368,8 @@ class LumiPawOrchestrator:
         item = flat_items.get(item_id, {})
         item_name = item.get("name", item_id)
 
-        if item.get("category_id") != "toy":
-            self.logger(f"[玩具] 请选择玩具类商品: {item_name}")
+        if item.get("category_id") not in ("toy", "food"):
+            self.logger(f"[玩具] 请选择玩具或食品类商品: {item_name}")
             self._notify_change()
             return False
         if item_id not in self.get_purchased_items():
