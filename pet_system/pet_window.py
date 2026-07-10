@@ -72,6 +72,10 @@ try:
                     target_slot = "head"
                 elif category_id == "neckwear":
                     target_slot = "neck"
+                elif category_id in ("food", "toy"):
+                    # 食品/玩具不走穿戴 slot，直接成功返回（由 PetWindow.wear_item 处理 fallback）
+                    print(f"[穿戴] {found_item['name']} → 玩具区")
+                    return True
                 break
 
         if not target_slot or not found_item:
@@ -255,21 +259,21 @@ class PetWindow(QWidget):
     # ----------------------------------------------------------
 
     def wear_item(self, item_id: str) -> bool:
-        """穿戴装饰物品（去除了每部位次数限制）。
-
-        Args:
-            item_id: 物品 ID（如 "bow_tie", "scarf", "casual_hat"）
-
-        Returns:
-            bool: 穿戴是否成功
-        """
+        """穿戴装饰物品。食品/玩具自动归入左下角展示。"""
         if not ECONOMY_AVAILABLE:
             print("[pet_window] economy_module 不可用")
             return False
 
         result = _economy_wear(item_id)
         if result:
-            self.refresh_decorations()
+            # 检查是否是真的穿戴（进了 warehouse）还是食品/玩具
+            from economy_module.economy import warehouse as _wh
+            in_warehouse = any(item_id in items for items in _wh.values())
+            if in_warehouse:
+                self.refresh_decorations()
+            else:
+                # 食品/玩具 → 左下角展示
+                self.show_toy(item_id)
         return result
 
     def take_off_item(self, item_id: str) -> bool:
